@@ -1,9 +1,8 @@
 # Mail DNS Check
 
-
-Choose mailbox help or intentional public-domain DNS inspection before entering anything. Mailbox help offers account and message-support next steps without collecting an address or querying DNS, for every provider. Public inspection (for example your-restaurant.com) does not require ownership; changing records requires the DNS administrator. This buildless browser-only inspector compares records with provider instructions and never diagnoses a mailbox or individual message. After choosing public inspection, enter a domain and explicitly
+Choose mailbox help or intentional public-domain DNS inspection before entering anything. Mailbox help offers account and message-support next steps without collecting an address or querying DNS, for every provider. Public inspection (for example your-restaurant.com) does not require ownership; changing records requires the DNS administrator. Use this browser tool to compare public DNS records with your provider’s instructions. It cannot diagnose a mailbox or individual message. After choosing public inspection, enter a domain and explicitly
 query Cloudflare 1.1.1.1, and read MX/SPF/DMARC plus an optional known DKIM selector.
-Live observations and invented demo fixtures are separate. No mail, SMTP probes,
+The built-in example uses fictional records and is labeled separately from live results. No mail, SMTP probes,
 account access, scans, storage, guessed selectors or automatic background requests.
 
 `npm test` runs the dependency-free Node core tests. `npm run preview` binds only
@@ -42,9 +41,9 @@ Primary rules: [Cloudflare DoH JSON API](https://developers.cloudflare.com/1.1.1
 
 MIT licensed; see [LICENSE](LICENSE) and [third-party inventory](THIRD_PARTY_NOTICES.md).
 Built by [Arcdrake](https://arcdrake.com/). The source is available in this repository; production hosting is being prepared.
-See [verification](docs/VERIFICATION.md) and [deployment](docs/DEPLOYMENT.md). This source candidate does not establish a public deployment.
+See [verification](docs/VERIFICATION.md) and [deployment](docs/DEPLOYMENT.md).
 
-Requires Node.js 22+ for the local preview and core tests. No install is needed.
+Requires Node.js 24 or newer for the local preview and tests. No install is needed.
 `npm test` runs deterministic core tests. `npm run package` requires Python 3.11+
 and creates a checked static ZIP plus SHA-256 manifest in `artifacts/release/`.
 There is no frontend compilation step; `dist/` is the application source.
@@ -57,10 +56,6 @@ physical devices, screen readers and other engines are not newly verified.
 For contributions, supply a reproducible issue with synthetic inputs only; never
 attach real credentials or private URLs/domains. Run the relevant core/browser
 checks with a proposed fix. [Report an issue](https://github.com/ArcdrakeStudios/mail-dns-check/issues).
-
-## Local usability verification, 15 October 2026
-
-16 deterministic core tests and 23 Chromium browser fixture checks pass. Mailbox-help journeys for known and unknown providers make no DNS queries. Unknown direct domains cannot bypass the intent gate; email addresses require domain-only confirmation after public-DNS intent. The result overview states routing destinations, sending policy and qualifier meaning, DMARC monitoring/enforcement and whether a signing key was found or skipped, with next actions. Raw records are collapsed. NXDOMAIN, unavailable answers, parse limitations and configuration concerns remain separate. Browser fixtures include ~all, p=none, a supplied selector1 key and the visible Microsoft 365 selector1/selector2 guide (not a provider-integration test), NXDOMAIN, unavailable answers and cancellation races. Updated synthetic desktop/mobile screenshots were visually inspected. This is local verification; production-origin testing remains separate.
 
 ## Source, support and development
 
