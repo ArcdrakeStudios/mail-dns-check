@@ -1,9 +1,9 @@
 # Verification
 
-Latest local pass: 15 October 2026. 16 deterministic core tests passed under Node.js 24.14.0; 23 Chromium 151.0.7922.34 browser fixture checks passed. Mailbox-help journeys for Gmail, Yahoo, Outlook and unknown providers make no DNS queries. Every domain requires public-DNS intent; every email requires explicit domain-only confirmation, and no local part is sent. Switching to mailbox help cancels pending DNS results. Provider detection never establishes ownership or intent. The overview renders ~all, p=none, supplied/omitted DKIM selectors, a CNAME-only answer, permissive SPF, tool parse limitations, missing records and partial unavailability, NXDOMAIN and unavailable results. Cancel, Clear and demo replacement discard late responses. A versionless signing key remains a candidate, not a validated key. Updated synthetic desktop and 390px screenshots were visually inspected; no horizontal overflow was measured. No physical-device, screen-reader, non-Chromium, owner or production-origin acceptance is claimed.
+Latest local pass: 15 October 2026. 16 deterministic core tests passed under Node.js 24.14.0; 23 Chromium 151.0.7922.34 browser fixture checks passed. Mailbox-help journeys for Gmail, Yahoo, Outlook and unknown providers make no DNS queries. Every domain requires public-DNS intent; every email requires explicit domain-only confirmation, and no local part is sent. Switching to mailbox help cancels pending DNS results. Provider detection never establishes ownership or intent. The overview renders ~all, p=none, supplied/omitted DKIM selectors, a CNAME-only answer, permissive SPF, tool parse limitations, missing records and partial unavailability, NXDOMAIN and unavailable results. Cancel, Clear and demo replacement discard late responses. A versionless signing key remains a candidate, not a validated key. Updated synthetic desktop and 390px screenshots were visually inspected; no horizontal overflow was measured. Physical devices, screen readers, non-Chromium browsers and the production origin have not been tested.
 
-Run `npm test`. For browser checks follow the [README](../README.md): an optional
-existing Playwright installation/browser cache is required. The browser script
+Run `npm test`. For browser checks follow the [README](../README.md): install the locked
+Playwright dependency and Chromium using the documented commands. The browser script
 starts its own loopback server and closes it and its isolated browser afterward.
 Screenshots default to ignored artifacts; UPDATE_SCREENSHOTS=1 is a deliberate
 release-image refresh. The application needs no package installation.
@@ -12,4 +12,5 @@ The static package builder rejects unexpected files/subdirectories, uses stored
 ZIP entries with fixed metadata, checks each archive member against source and
 writes archive/per-file SHA-256 hashes. It is not a publishing command.
 
-A separate 14 October public arcdrake.com browser check received HTTP 200 application/dns-json and Access-Control-Allow-Origin: * for the three intended MX/TXT/DMARC queries. Current code rendered the results from loopback. No DKIM selector was guessed, no mail was sent, and no infrastructure was changed. Actual production-origin verification remains a deployment check.
+Production-origin DNS-over-HTTPS behavior requires a separate check after deployment,
+including response status, JSON content type, CORS and rendering of live results.
