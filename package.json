@@ -1,0 +1,28 @@
+{
+  "name": "mail-dns-check",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "preview": "node preview.mjs",
+    "test:browser": "node tests/readiness-browser.mjs",
+    "package": "python tools/package-release.py",
+    "test:ci": "node ci/browser.mjs",
+    "package:release": "python tools/package-release.py"
+  },
+  "license": "MIT",
+  "version": "1.0.0",
+  "devDependencies": {
+    "playwright": "1.64.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ArcdrakeStudios/mail-dns-check.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ArcdrakeStudios/mail-dns-check/issues"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}
