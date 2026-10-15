@@ -3,7 +3,9 @@
 Choose mailbox help or intentional public-domain DNS inspection before entering anything. Mailbox help offers account and message-support next steps without collecting an address or querying DNS, for every provider. Public inspection (for example your-restaurant.com) does not require ownership; changing records requires the DNS administrator. Use this browser tool to compare public DNS records with your provider’s instructions. It cannot diagnose a mailbox or individual message. After choosing public inspection, enter a domain and explicitly
 query Cloudflare 1.1.1.1, and read MX/SPF/DMARC plus an optional known DKIM selector.
 The built-in example uses fictional records and is labeled separately from live results. No mail, SMTP probes,
-account access, scans, storage, guessed selectors or automatic background requests.
+account access, scans, guessed selectors or automatic background requests. Only
+the interface language preference is saved in browser storage; domains, selectors
+and DNS results are not.
 
 `npm test` runs the dependency-free Node core tests. `npm run preview` binds only
 127.0.0.1:43220 for at most 20 minutes; stop with Ctrl+C. Static output is `dist/`; hosting is configured separately.
