@@ -12,4 +12,4 @@ The static package builder rejects unexpected files/subdirectories, uses stored
 ZIP entries with fixed metadata, checks each archive member against source and
 writes archive/per-file SHA-256 hashes. It is not a publishing command.
 
-A separate 14 October public arcdrake.com browser check received HTTP 200 application/dns-json and Access-Control-Allow-Origin: * for the three intended MX/TXT/DMARC queries. Current code rendered the results from loopback. No DKIM selector was guessed, no mail was sent, and no infrastructure was changed. Actual production-origin verification remains a deployment check.
+On 14 October 2026, the app served from a local loopback origin queried the public DNS records for arcdrake.com through Cloudflare DoH. Its MX, TXT and DMARC requests returned HTTP 200 with application/dns-json and Access-Control-Allow-Origin: *. The app rendered those responses. This tested arcdrake.com as the queried domain, not as the app hosting origin. Production-origin behavior requires a separate check after deployment.
