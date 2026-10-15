@@ -7,6 +7,7 @@
     "preview": "node preview.mjs",
     "test:browser": "node tests/readiness-browser.mjs",
     "package": "python tools/package-release.py",
+    "test:localization": "node tests/localization-browser.mjs",
     "test:ci": "node ci/browser.mjs",
     "package:release": "python tools/package-release.py"
   },
