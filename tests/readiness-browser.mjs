@@ -54,12 +54,14 @@ try {
  await page.locator('#domain').fill('keys.example');await page.locator('#selector').fill('selector');await page.locator('#check').click();await page.waitForFunction(()=>window.__pending.length===4);await page.evaluate(()=>window.__finish());
  await page.waitForFunction(()=>document.querySelector('#cards').textContent.includes('DKIM candidate observed'));
  assert.match(await page.locator('#cards').textContent(),/DKIM candidate observed \u00b7 not validated/);results.push('Versionless DKIM k=rsa; t=y; p=abc renders as candidate, not verified key');
+ await page.locator('#domain').fill('');await page.locator('#selector').fill('');
  await page.locator('#demo').click();
+ assert.equal(await page.locator('#domain').inputValue(),'');assert.equal(await page.locator('#selector').inputValue(),'');
  await page.screenshot({path:fileURLToPath(new URL(screenshotFolder+'screenshot-desktop.png',import.meta.url)),fullPage:true});
  await page.setViewportSize({width:390,height:844});assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
  await page.screenshot({path:fileURLToPath(new URL(screenshotFolder+'screenshot-mobile.png',import.meta.url)),fullPage:true});results.push('390px fictional-demo layout has no horizontal overflow');
- await page.locator('#domain').fill('clear.example');await page.locator('#check').click();await page.waitForFunction(()=>window.__pending.length===4);await page.locator('#clear').click();await page.evaluate(()=>window.__finish());await page.waitForTimeout(30);assert(await page.locator('#results').isHidden());assert.equal(await page.locator('#domain').inputValue(),'');results.push('Clear discards pending answers and removes domain/results');
+ await page.locator('#domain').fill('clear.example');await page.locator('#selector').fill('selector');await page.locator('#check').click();await page.waitForFunction(()=>window.__pending.length===4);await page.locator('#clear').click();await page.evaluate(()=>window.__finish());await page.waitForTimeout(30);assert(await page.locator('#results').isHidden());assert.equal(await page.locator('#domain').inputValue(),'');results.push('Clear discards pending answers and removes domain/results');
  assert.deepEqual(errors,[]);results.push('No uncaught page errors');
- await writeFile(new URL('../artifacts/readiness/browser.json',import.meta.url),JSON.stringify({browser:browser.version(),date:new Date().toISOString(),checks:results,limits:'Browser fetch fixtures deliberately ignore abort; no live resolver, CORS, physical device or owner acceptance claimed.'},null,2));
+ await writeFile(new URL('../artifacts/readiness/browser.json',import.meta.url),JSON.stringify({browser:browser.version(),date:new Date().toISOString(),checks:results,limits:'Browser fetch fixtures deliberately ignore abort; no live resolver, CORS or physical-device coverage claimed.'},null,2));
  console.log(JSON.stringify({checks:results,browser:browser.version()},null,2));
 } finally { if(browser)await browser.close(); server.kill(); await new Promise(resolve=>server.exitCode!==null?resolve():server.once('exit',resolve)); }
