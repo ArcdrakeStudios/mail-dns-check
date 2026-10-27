@@ -31,8 +31,6 @@ try {
  }};
  });
  await page.goto('http://127.0.0.1:43220');
-  await page.getByRole('dialog').getByRole('button', {name:/Continue without usage counts|Ohne Nutzungszählung fortfahren/}).click();
-
  assert(await page.locator('#dns-fields').isHidden());assert(await page.locator('#demo-row').isVisible());await page.locator('#demo').click();assert(await page.locator('#results').isVisible());assert.equal(await page.evaluate(()=>window.__pending.length),0);assert.equal(await page.locator('input[name=purpose]:checked').count(),0);await page.locator('#form').evaluate(e=>e.requestSubmit());assert.match(await page.locator('#error').textContent(),/Choose whether/);assert.equal(await page.evaluate(()=>window.__pending.length),0);results.push('Intent begins unselected and prevents domain checks before explicit choice');
  for(const input of ['tim@gmail.com','tim@yahoo.com','tim@outlook.com','tim@unknown-provider.example','unknown-provider.example']){await page.locator('#purpose-dns').check();await page.locator('#domain').fill(input);await page.locator('#purpose-mailbox').check();assert(await page.locator('#dns-fields').isHidden());assert(await page.locator('#mailbox-help').isVisible());assert(await page.locator('#demo-row').isVisible());assert.match(await page.locator('#mailbox-help').textContent(),/every provider/);assert.match(await page.locator('#mailbox-help').textContent(),/sender, recipient and approximate time/);assert.equal(await page.evaluate(()=>window.__pending.length),0);assert(await page.locator('#results').isHidden());}results.push('Personal mailbox route gives useful account/message help for known or unknown providers without DNS');
  await page.locator('#purpose-dns').check();
