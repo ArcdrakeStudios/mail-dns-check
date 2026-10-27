@@ -16,3 +16,5 @@
 .feedback-panel textarea,.feedback-panel select{display:block;width:100%;max-width:100%;margin-top:8px;padding:12px;border:1px solid #aebdb3;border-radius:9px;font:inherit;background:#fcfcf9;color:#202b32}
 .feedback-panel textarea{min-height:140px;resize:vertical}.demo-row{border-top:0;border-bottom:1px solid #e2e7de}
 @media(max-width:650px){header{height:auto;min-height:90px;padding-top:14px;padding-bottom:14px}.feedback-panel{padding:20px}}
+
+.arcdrake-consent summary{color:inherit}

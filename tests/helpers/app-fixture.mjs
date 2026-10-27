@@ -25,13 +25,24 @@ class Element {
 export const all = root => [root, ...root.children.flatMap(all)];
 const usable = () => ({ Status: 0, Answer: [] });
 
-export function fixture({ allowed = false, offline = false, enabled = true, fetchImpl, privacy = {}, queryFn = async () => usable() } = {}) {
-  let language = 'en';
+export function fixture({ allowed = false, offline = false, enabled = true, fetchImpl, privacy = {}, queryFn = async () => usable(), initialLanguage = 'en', nativeDialog = false } = {}) {
+  let language = initialLanguage;
   const calls = [], pending = [], dns = [], ids = new Map(), events = {};
-  const doc = { createElement: tag => new Element(tag, doc), getElementById: id => {
+  const listeners = {};
+  const view = { addEventListener(key, callback) {
+    (listeners[key] ??= []).push(callback);
+    events[key] = event => { for (const fn of listeners[key]) fn(event); };
+  }, dispatchEvent(event) { events[event.type]?.(event); } };
+  class LocalEvent { constructor(type, options) { this.type = type; this.detail = options.detail; } }
+  const doc = { createElement: tag => {
+    const element = new Element(tag, doc);
+    if (nativeDialog && tag === 'dialog') { element.showModal = () => { element.open = true; }; element.close = () => { element.open = false; }; }
+    return element;
+  }, getElementById: id => {
     if (!ids.has(id)) ids.set(id, new Element('div', doc));
     return ids.get(id);
   } };
+  if (nativeDialog) { doc.defaultView = view; doc.body = new Element('body', doc); doc.head = new Element('head', doc); }
   const data = new Map(allowed ? [[CHOICE_KEY, 'yes']] : []);
   const storage = { getItem: key => data.get(key), setItem: (key, value) => data.set(key, value) };
   class CheckSession extends core.CheckSession {
@@ -46,12 +57,12 @@ export function fixture({ allowed = false, offline = false, enabled = true, fetc
         return Response.json(path.endsWith('/feedback') ? { ok: true, id: '00112233-4455-4677-8899-aabbccddeeff' } : { ok: true }, { status: 202 });
       },
     }),
-    document: doc, window: { addEventListener: (key, callback) => { events[key] = callback; } },
+    document: doc, window: view, CustomEvent: LocalEvent,
   });
   const source = readFileSync(new URL('../../dist/app.js', import.meta.url), 'utf8');
   vm.runInContext(source.replace(/^import[^\n]+;\r?\n/gm, ''), context);
   const el = id => doc.getElementById(id);
   const submit = () => el('form').listeners.submit({ preventDefault() {} });
-  return { calls, pending, dns, el, submit, events, storage,
-    changeLanguage: next => { language = next; events['arcdrake-language-change'](); } };
+  return { calls, pending, dns, el, submit, events, storage, doc,
+    changeLanguage: next => { language = next; view.dispatchEvent(new LocalEvent('arcdrake-language-change', { detail: { language: next } })); } };
 }
