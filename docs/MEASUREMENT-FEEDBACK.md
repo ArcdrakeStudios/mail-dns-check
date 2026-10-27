@@ -8,8 +8,7 @@ server write, so failure does not prove nothing was stored.
 
 `dist/measurement-config.js` sets `enabled: false`. The product adapter blocks
 all intake fetches even with previously saved consent or an explicit send.
-The count opt-in button is disabled and its status explains page availability;
-opt-out still clears a saved choice. The feedback form keeps drafts and reports
+No consent window is offered in this disabled build; earlier saved permission cannot trigger intake. The feedback form keeps drafts and reports
 an unavailable service. No feedback is persisted in this static configuration.
 The public copy uses page availability wording, independent of build location.
 
@@ -96,8 +95,7 @@ Only daily count totals are stored for the current UTC day plus 89 prior days.
 Feedback is accessible to authorized Arcdrake triage operators/agents for 30 days,
 then hidden immediately and physically deleted by hourly active-store cleanup,
 subject to platform failure. Provider backups/recovery have separate retention
-that must be checked before activation. Private authenticated exports must expire
-by the row expiry or earlier, and deletion requests must cover retained copies.
+that must be checked before activation. Earlier records/exports retain their original deletion commitments. Revised-notice submissions follow the prospective policy below, and deletion requests must account for copies actually held.
 Receipt-based requests use existing company contact, not a browser delete secret.
 
 Before any separately authorized release: integrate the shared private backend
@@ -116,3 +114,15 @@ not grant consent: GPC/DNT and the per-call opt-in/off gates still apply.
 Rollback removes client integration and API forwarding/binding together or
 returns explicit 503 while preserving static/DNS behavior. Keep cleanup active
 for retained feedback; do not delete the namespace as an incidental rollback.
+
+## Consent and feedback notice update — 27 October 2026
+
+This private source candidate copies the reviewed canonical shared client/contract from consent source `d8c50c8`. Both copied modules are explicitly LF in `.gitattributes` to preserve byte parity across checkouts. No production push, API activation or deployment is included. Local task behavior and privacy gates remain intact.
+
+The feedback area has a short intro and fields; analytics detail and equally usable allow/decline controls live in the separate branded Privacy choices window. Existing EN/DE privacy/contact links remain. The current client adds exact `noticeVersion: "2026-10-27-mail-v1"` to explicit feedback payloads. This identifies its notice version, not proof that a human read it. An old tab/client without the marker remains storage-only forever; it cannot be replayed into mail.
+
+For revised-notice submissions the website working copy still expires after 30 days, with hourly cleanup under normal operation. Feedback also queues for forwarding through the existing Microsoft 365 transport to Arcdrake's business mailbox. Mailbox correspondence is deleted when no longer needed, subject to statutory obligations or necessary legal claims. A saved receipt confirms website storage/queueing, never inbox delivery or a human response. Existing collected records and exports/copies retain the original promises under which they were collected; there is no retroactive exemption or new manual mailbox/export deletion duty.
+
+Host release must first accept the optional marker with `FEEDBACK_MAIL_ACTIVE="0"`, then supply the existing private mail entrypoint/binding and deploy all revised notices/client adapters. Verify service bindings and Operations Control delivery health before explicitly activating dispatch last. Marker-tagged messages queue while off without transport attempts; old/unmarked records remain legacy. Keep the deliberate active setting in later reviewed deployment configs. Standalone builds with a disabled collection switch remain disabled.
+
+Candidate verification: `npm test` passed 34 tests. Shared client/contract byte parity matches the canonical LF Git blobs; source hashes are pinned where required. The local release package/build completed. No browser, physical-device, live backend or inbox verification is claimed by this source-propagation packet.

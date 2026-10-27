@@ -969,8 +969,8 @@ entries.push(...[
   ", den einzigen verwendeten Resolver. Cloudflare erhält die DNS-Namen und deine öffentliche IP-Adresse. Domains, Selektoren und Ergebnisse werden von dieser App nicht gespeichert."
  ],
  [
-  "Feedback & optional usage counts",
-  "Feedback und optionale Nutzungszählung"
+  "Feedback",
+  "Feedback"
  ],
  [
   "Feedback and usage counts may be unavailable on this page. An unconfirmed send keeps your text in the form, even if storage succeeded. There is no automatic retry. The DNS checker and fictional demo work independently.",

@@ -10,15 +10,13 @@ export function mountProductFeedback(container, { enabled = MEASUREMENT_CONFIG.e
     ...(!enabled ? { fetchImpl: async () => { throw new Error('unavailable'); } } : {}),
   });
   if (!enabled) {
-    const [allow, deny] = container.querySelectorAll('button');
-    const [choiceStatus] = container.querySelectorAll('p[role="status"]');
-    allow.disabled = true;
-    const refresh = ui.refreshChoice;
-    ui.refreshChoice = () => {
-      refresh();
-      choiceStatus.textContent = 'Usage counts are unavailable on this page.';
+    const choice = ui.client.choice;
+    ui.client.choice = () => choice() === 'blocked' ? 'blocked' : 'no';
+    const track = ui.client.track.bind(ui.client);
+    ui.client.track = async event => {
+      if (!['page_view', 'play_start', 'play_complete', 'feedback_open', 'tool_start', 'tool_complete'].includes(event)) return track('invalid');
+      return { ok: true, skipped: true };
     };
-    deny.addEventListener('click', ui.refreshChoice);
     ui.refreshChoice();
   }
   return ui;
