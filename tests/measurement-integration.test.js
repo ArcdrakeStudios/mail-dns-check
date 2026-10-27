@@ -11,7 +11,7 @@ test('packaged configuration disables every intake flow, even with stored consen
   assert.equal(MEASUREMENT_CONFIG.enabled, false);
   const f = fixture({ allowed: true, enabled: MEASUREMENT_CONFIG.enabled });
   const nodes = all(f.el('measurement-feedback'));
-  assert.equal(nodes.find(el => el.textContent === NOTICES.en.allow).disabled, true);
+  assert.equal(nodes.some(el => el.textContent === NOTICES.en.allow), false);
   f.el('demo').onclick();
   f.el('purpose-dns').checked = true;
   f.el('domain').value = 'studio.example';
@@ -21,12 +21,11 @@ test('packaged configuration disables every intake flow, even with stored consen
   nodes.find(el => el.tag === 'select').value = 'other';
   nodes.find(el => el.tag === 'textarea').value = 'Synthetic draft';
   await nodes.find(el => el.tag === 'form').listeners.submit({ preventDefault() {} });
-  nodes.find(el => el.textContent === NOTICES.en.deny).listeners.click();
   f.events.storage();
   assert.equal(f.calls.length, 0);
   assert.equal(nodes.find(el => el.tag === 'textarea').value, 'Synthetic draft');
   assert.ok(nodes.some(el => el.textContent === NOTICES.en.unavailable));
-  assert.ok(nodes.some(el => el.textContent === 'Usage counts are unavailable on this page.'));
+  assert.equal(f.storage.getItem(CHOICE_KEY), 'yes'); // Saved preference cannot trigger intake while this build is disabled.
 });
 
 test('real entry, demo, mailbox help, invalid input and email confirmation never submit feedback or start DNS', async () => {
@@ -124,7 +123,7 @@ test('product feedback opens without a send, uses existing links/categories, and
   await nodes.find(el => el.tag === 'form').listeners.submit({ preventDefault() {} });
   assert.equal(f.calls.length, 1);
   assert.equal(f.calls[0].path, '/api/feedback');
-  assert.deepEqual(f.calls[0].body, { product: 'maildns', category: 'bug', message: 'Synthetic report' });
+  assert.deepEqual(f.calls[0].body, { product: 'maildns', category: 'bug', message: 'Synthetic report', noticeVersion: '2026-10-27-mail-v1' });
   assert.equal(message.value, 'Synthetic report');
   assert.ok(nodes.some(el => el.textContent === NOTICES.en.unavailable));
   assert.equal(f.storage.getItem(CHOICE_KEY), undefined);
