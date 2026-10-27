@@ -1,6 +1,21 @@
-import './language.js';
+import { getLanguage } from './language.js';
 import{domain,inputAdvice,selector,explain,records,candidates,CheckSession}from'./core.js';
+import { mountProductFeedback } from './feedback.js';
+import { runDnsInspection } from './measurement.js';
 const $=id=>document.getElementById(id);const checker=new CheckSession();
+// Mount once: the bundled translator changes copy without discarding drafts,
+// in-flight sends or receipt IDs. All writes use the host's exact same-origin API.
+const feedback = mountProductFeedback($('measurement-feedback'));
+function feedbackLinks() {
+ const prefix = getLanguage() === 'de' ? '/de' : '';
+ const links = $('measurement-feedback').querySelectorAll('a');
+ links[0].href = `https://tools.arcdrake.com${prefix}/privacy/`;
+ links[1].href = `https://arcdrake.com${prefix}/contact/`;
+}
+feedbackLinks();
+window.addEventListener('arcdrake-language-change', feedbackLinks);
+window.addEventListener('storage', () => feedback.refreshChoice());
+void feedback.client.track('page_view');
 const labels={MX:['MX',15],SPF:['TXT',16],DMARC:['TXT',16],DKIM:['TXT',16]};
 function node(tag,text,cls){const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;if(cls==='record')e.dataset.l10nRaw='';return e;}
 function stop(message){checker.cancel();$('cancel').hidden=true;$('check').disabled=false;if(message)$('status').textContent=message;}
@@ -23,13 +38,13 @@ $('form').addEventListener('submit',async event=>{
  $('domain').value=name;$('results').hidden=true;$('cancel').hidden=false;$('check').disabled=true;
  $('status').textContent=`Checking ${name} with Cloudflare…`;
  const tasks=[['MX',name,'MX'],['SPF',name,'TXT'],['DMARC','_dmarc.'+name,'TXT'],...(sel?[['DKIM',sel+'._domainkey.'+name,'TXT']]:[])];
- const results=await checker.run(tasks);if(results===null)return;
+ const results=await runDnsInspection(checker,tasks,feedback.client);if(results===null)return;
  $('cancel').hidden=true;$('check').disabled=false;render(name,results);
  $('status').textContent='Check finished. Read each observation and its limits below.';
 });
-for(const id of ['purpose-mailbox','purpose-dns'])$(id).addEventListener('change',()=>{stop();$('results').hidden=true;$('input-advice').hidden=true;$('error').textContent='';$('purpose-help').hidden=true;const dns=$('purpose-dns').checked;$('dns-fields').hidden=!dns;$('demo-row').hidden=!dns;$('mailbox-help').hidden=dns;$('status').textContent=dns?'Public DNS inspection selected. No query until you explicitly check.':'Mailbox help selected. This help makes no DNS queries.';});
+for(const id of ['purpose-mailbox','purpose-dns'])$(id).addEventListener('change',()=>{stop();$('results').hidden=true;$('input-advice').hidden=true;$('error').textContent='';$('purpose-help').hidden=true;const dns=$('purpose-dns').checked;$('dns-fields').hidden=!dns;$('mailbox-help').hidden=dns;$('status').textContent=dns?'Public DNS inspection selected. No query until you explicitly check.':'Mailbox help selected. This help makes no DNS queries.';});
 $('domain').addEventListener('input',()=>{$('input-advice').hidden=true;});
 $('cancel').onclick=()=>stop('Cancelled. No results from this check will be shown.');
-$('clear').onclick=()=>{stop();$('form').reset();$('dns-fields').hidden=true;$('demo-row').hidden=true;$('mailbox-help').hidden=true;$('purpose-help').hidden=false;$('input-advice').hidden=true;$('results').hidden=true;$('cards').replaceChildren();$('error').textContent='';$('status').textContent='Cleared. Nothing was saved.';$('purpose-mailbox').focus();};
-$('demo').onclick=()=>{if(!$('purpose-dns').checked)return;stop();$('input-advice').hidden=true;$('error').textContent='';const sample=(name,type,Answer)=>({Status:0,TC:false,AD:false,name,type,Answer});render('studio.example', {MX:sample('studio.example','MX',[{name:'studio.example.',type:15,TTL:3600,data:'10 mail.provider.example.'}]),SPF:sample('studio.example','TXT',[{name:'studio.example.',type:16,TTL:3600,data:'"v=spf1 include:_spf.provider.example -all"'}]),DMARC:sample('_dmarc.studio.example','TXT',[])},true);$('status').textContent='Fictional demo loaded. No DNS query was made.';};
+$('clear').onclick=()=>{stop();$('form').reset();$('dns-fields').hidden=true;$('mailbox-help').hidden=true;$('purpose-help').hidden=false;$('input-advice').hidden=true;$('results').hidden=true;$('cards').replaceChildren();$('error').textContent='';$('status').textContent='Cleared. Domain, selector and results were not saved.';$('purpose-mailbox').focus();};
+$('demo').onclick=()=>{stop();$('input-advice').hidden=true;$('error').textContent='';const sample=(name,type,Answer)=>({Status:0,TC:false,AD:false,name,type,Answer});render('studio.example', {MX:sample('studio.example','MX',[{name:'studio.example.',type:15,TTL:3600,data:'10 mail.provider.example.'}]),SPF:sample('studio.example','TXT',[{name:'studio.example.',type:16,TTL:3600,data:'"v=spf1 include:_spf.provider.example -all"'}]),DMARC:sample('_dmarc.studio.example','TXT',[])},true);$('status').textContent='Fictional demo loaded. No DNS query was made.';};
 window.addEventListener('pagehide',()=>stop());

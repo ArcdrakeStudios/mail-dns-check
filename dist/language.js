@@ -1,3 +1,4 @@
+import { NOTICES } from './shared/measurement-feedback-client.mjs';
 // Local, bundled translations. User input and protocol evidence are never translated.
 const KEY='arcdrake-tools-language';
 let language='en';
@@ -37,10 +38,6 @@ const entries=[
  [
   "Check the public records.",
   "Prüfe die öffentlichen Einträge."
- ],
- [
-  "For people intentionally inspecting a domain’s public email setup, such as a business owner comparing your-restaurant.com with provider instructions. Public inspection does not require domain ownership. For account or missing-message help, choose the mailbox option below.",
-  "Für alle, die gezielt die öffentliche E-Mail-Konfiguration einer Domain prüfen, etwa um deine-gaststaette.de mit Anbieteranleitungen zu vergleichen. Dafür muss dir die Domain nicht gehören. Bei Konto- oder Zustellungsproblemen wähle unten die Postfachhilfe."
  ],
  [
   "Domain checker",
@@ -87,10 +84,6 @@ const entries=[
   "Diese Postfachhilfe stellt keine DNS-Anfragen. Wenn du gezielt öffentliche Domain-Einträge prüfen möchtest, wähle oben die zweite Option."
  ],
  [
-  "This inspects public records for a domain you choose; it does not establish that you control it or that a mailbox works. Use your mail provider’s domain setup instructions to compare results. Changing records requires access through the domain’s DNS administrator. You can inspect public DNS without that access.",
-  "Geprüft werden öffentliche Einträge einer gewählten Domain. Dies bestätigt weder deine Kontrolle darüber noch die Funktion eines Postfachs. Vergleiche die Ergebnisse mit den Domain-Anleitungen deines E-Mail-Anbieters. Änderungen erfordern Zugriff über die DNS-Administration. Die öffentliche Prüfung ist ohne diesen Zugriff möglich."
- ],
- [
   "Domain to inspect",
   "Zu prüfende Domain"
  ],
@@ -135,10 +128,6 @@ const entries=[
   "Bei der Prüfung werden diese DNS-Namen an"
  ],
  [
-  ", the only resolver used. Cloudflare can see the queries. Only the language preference is saved by this app.",
-  " gesendet, den einzigen verwendeten Resolver. Cloudflare sieht die Anfragen. Diese App speichert nur die Sprachwahl."
- ],
- [
   "Check public DNS",
   "Öffentliches DNS prüfen"
  ],
@@ -149,10 +138,6 @@ const entries=[
  [
   "Clear",
   "Leeren"
- ],
- [
-  "Want to see how it works?",
-  "Möchtest du sehen, wie es funktioniert?"
  ],
  [
   "Load a fictional demo",
@@ -205,10 +190,6 @@ const entries=[
  [
   "A public key for a specific signing selector. The provider tells you the selector.",
   "Ein öffentlicher Schlüssel für einen bestimmten Signaturselektor. Den Selektor nennt der Anbieter."
- ],
- [
-  "One resolver. No background checks. No history or cookies. Only the language preference is saved.",
-  "Ein Resolver. Keine Hintergrundprüfungen. Kein Verlauf, keine Cookies. Nur die Sprachwahl wird gespeichert."
  ],
  [
   "Rules & primary sources",
@@ -369,10 +350,6 @@ const entries=[
  [
   "Cancelled. No results from this check will be shown.",
   "Abgebrochen. Ergebnisse dieser Prüfung werden nicht angezeigt."
- ],
- [
-  "Cleared. Nothing was saved.",
-  "Geleert. Prüfdaten wurden nicht gespeichert."
  ],
  [
   "Fictional demo loaded. No DNS query was made.",
@@ -971,6 +948,51 @@ const entries=[
   "Die Anfrage war nicht verfügbar. Prüfe deine Verbindung oder versuche es später erneut. Die unverarbeiteten Diagnosedaten stehen unten."
  ]
 ];
+// Shared notices stay in sync with the copied client; drafts are never rebuilt.
+entries.push(...Object.keys(NOTICES.en).map(key => [NOTICES.en[key].trim(), NOTICES.de[key].trim()]));
+entries.push([NOTICES.en.sent + "{0}", NOTICES.de.sent + "{0}"]);
+entries.push(...[
+ [
+  "Compare a domain’s public email records with your provider’s instructions. Need account or missing-message help? Choose mailbox help below.",
+  "Vergleiche die öffentlichen E-Mail-Einträge einer Domain mit den Anleitungen deines Anbieters. Geht es um dein Konto oder eine fehlende Nachricht? Wähle unten die Postfachhilfe."
+ ],
+ [
+  "Explore without a DNS request.",
+  "Ausprobieren ohne DNS-Abfrage."
+ ],
+ [
+  "Public inspection does not require domain ownership. Changing records requires the DNS administrator. Results cannot tell whether a mailbox works.",
+  "Die öffentliche Abfrage erfordert keinen Domainbesitz. Änderungen erfordern den DNS-Administrator. Die Ergebnisse sagen nicht, ob ein Postfach funktioniert."
+ ],
+ [
+  ", the only resolver used. Cloudflare receives the DNS names and your public IP address. Domains, selectors and results are not saved by this app.",
+  ", den einzigen verwendeten Resolver. Cloudflare erhält die DNS-Namen und deine öffentliche IP-Adresse. Domains, Selektoren und Ergebnisse werden von dieser App nicht gespeichert."
+ ],
+ [
+  "Feedback & optional usage counts",
+  "Feedback und optionale Nutzungszählung"
+ ],
+ [
+  "Feedback and usage counts may be unavailable on this page. An unconfirmed send keeps your text in the form, even if storage succeeded. There is no automatic retry. The DNS checker and fictional demo work independently.",
+  "Feedback und Nutzungszählung sind auf dieser Seite möglicherweise nicht verfügbar. Bei unbestätigtem Versand bleibt dein Text im Formular, auch wenn die Speicherung erfolgreich war. Es gibt keinen automatischen Neuversuch. DNS-Prüfung und fiktive Demo funktionieren unabhängig davon."
+ ],
+ [
+  "Usage counts are unavailable on this page.",
+  "Nutzungszählungen sind auf dieser Seite nicht verfügbar."
+ ],
+ [
+  "One resolver. No background DNS checks. No saved DNS history or cookies. Language and usage-count preferences may be saved in this browser.",
+  "Ein Resolver. Keine DNS-Abfragen im Hintergrund. Kein gespeicherter DNS-Verlauf und keine Cookies. Sprach- und Zählungseinstellungen können in diesem Browser gespeichert werden."
+ ],
+ [
+  "Cleared. Domain, selector and results were not saved.",
+  "Geleert. Domain, Selektor und Ergebnisse wurden nicht gespeichert."
+ ],
+ [
+  "Feedback requires JavaScript.",
+  "Feedback erfordert JavaScript."
+ ]
+]);
 const patterns=entries.filter(([s])=>s.includes('{0}')).map(([s,t])=>[new RegExp('^'+s.split(/(\{\d+\})/).map(v=>/^\{\d+\}$/.test(v)?'(.*?)':v.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('')+'$','s'),t]);
 const exact=new Map(entries);
 export function translate(value){const raw=String(value);if(language!=='de')return raw;const s=raw.trim();if(!s)return raw;let output=exact.get(s);if(output===undefined){for(const [pattern,target] of patterns){const match=s.match(pattern);if(match){output=target.replace(/\{(\d+)\}/g,(_,i)=>match[Number(i)+1]);break;}}}return output===undefined?raw:raw.replace(s,()=>output);}
@@ -983,4 +1005,6 @@ function setLanguage(next,announce=false){if(!['de','en'].includes(next))return;
 const control=document.createElement('nav');control.className='language-switch';control.setAttribute('aria-label','Language / Sprache');control.innerHTML='<button type="button" data-app-language="en" lang="en">English</button><button type="button" data-app-language="de" lang="de">Deutsch</button>';
 document.querySelector('header').append(control);control.addEventListener('click',e=>{if(e.target.dataset.appLanguage)setLanguage(e.target.dataset.appLanguage,true);});
 window.addEventListener('arcdrake-language-change',e=>setLanguage(e.detail?.language));
+window.addEventListener('storage',e=>{if(e.key===KEY&&['de','en'].includes(e.newValue)&&e.newValue!==language)setLanguage(e.newValue,true);});
+window.addEventListener('popstate',()=>{const next=new URL(location.href).searchParams.get('lang');if(['de','en'].includes(next)&&next!==language)setLanguage(next,true);});
 refresh();

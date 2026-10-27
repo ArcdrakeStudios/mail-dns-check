@@ -8,7 +8,7 @@ Understand a domain's public email configuration and compare it with your provid
 
 - **Need help with your mailbox or a missing message?** Choose mailbox help. It explains where to seek account or message support without collecting your address or querying DNS. Checking `gmail.com` or another provider's domain cannot diagnose your individual mailbox.
 - **Checking a domain's email setup?** Choose public DNS inspection, enter the domain and select **Check public DNS**. You can inspect public records without owning the domain; changing them requires its DNS administrator.
-- **Just exploring?** Choose public DNS inspection, then load the fictional demo to see a report without making any DNS requests.
+- **Just exploring?** Load the fictional demo at the top of the checker to see a report without making any DNS requests.
 
 An email address requires a separate confirmation to check only its domain. The part before `@` is never sent to the DNS resolver. If your provider gives you a DKIM selector, enter it; leaving it empty skips that lookup.
 
@@ -25,9 +25,17 @@ An email address requires a separate confirmation to check only its domain. The 
 
 Live checks send the requested DNS names to Cloudflare's DNS-over-HTTPS resolver at `https://cloudflare-dns.com/dns-query`. These direct browser requests expose your public IP address and the requested DNS names to Cloudflare. The application does not send mail, contact mail servers, access accounts, guess DKIM selectors or run background checks.
 
-English and German are available. Only the language preference is stored locally; domains, selectors and results are not saved by the application. The fictional demo and mailbox-help path make no DNS queries.
+English and German are available. Language and optional usage-count preferences may be stored locally; domains, selectors and results are not saved by the application. The fictional demo and mailbox-help path make no DNS queries.
 
 Results are observations of public DNS, not a mailbox diagnosis, authentication test, deliverability score or safety verdict. SPF dependencies and sender matching are not evaluated. DMARC checks the exact domain; organizational-domain policy discovery and inheritance are not evaluated. DKIM keys and message signatures are not validated. See [DNS interpretation and test coverage](docs/VERIFICATION.md) for the remaining boundaries.
+
+The candidate includes optional usage counts (off by default) and voluntary feedback to Arcdrake. Counts contain only the product and action type, never DNS inputs or results; they are action counts, not unique visitors. GPC/DNT and opt-out suppress events. Feedback sends only on **Send feedback** and can include a reply address. A static preview has no feedback backend: unconfirmed sends preserve the draft without automatic retries. This does not activate production collection. See [integration and retention](docs/MEASUREMENT-FEEDBACK.md).
+
+Intake is explicitly disabled in the packaged `measurement-config.js`, including
+when an earlier usage-count preference exists. The DNS checker works independently.
+An in-process integration check can explicitly enable a synthetic local pipeline;
+see the integration documentation. Enabling hosted intake requires separate host
+configuration and release.
 
 The hosted site receives ordinary page and asset requests. See its [privacy information](https://tools.arcdrake.com/privacy/) for hosting details.
 
